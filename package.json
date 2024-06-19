@@ -1,0 +1,40 @@
+{
+  "name": "tw-color-shades",
+  "version": "1.0.0-rc",
+  "description": "Generate Tailwind-compatible shades from a single color. Supported color formats: hex, rgb and hsl.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mbparvezme/tw-shades.git"
+  },
+  "type": "module",
+  "keywords": [
+    "tailwindcss",
+    "tailwind",
+    "shades",
+    "color",
+    "shades",
+    "hes",
+    "shades",
+    "rgb",
+    "shades",
+    "hsl",
+    "shades",
+    "shades",
+    "tailwind",
+    "shades",
+    "generator"
+  ],
+  "author": "M B Parvez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mbparvezme/tw-shades/issues"
+  },
+  "homepage": "https://github.com/mbparvezme/tw-shades#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
