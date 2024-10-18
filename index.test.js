@@ -32,4 +32,3 @@ describe('twShades function', () => {
     expect(() => twShades(color)).toThrowError('Unsupported color format');
   });
 });
-

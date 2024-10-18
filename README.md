@@ -1,10 +1,22 @@
-# tw-color-shades
+# tw-color-shades: TailwindCSS Shades Generator
 
-tw-color-shades is a JavaScript library that generates Tailwind CSS-compatible shades from a single color. It supports various color formats including HEX, RGB, and HSL, making it versatile for integrating with different design systems and applications.
+A lightweight JavaScript utility to generate TailwindCSS-compatible color shades from a single color input. The library supports various color formats such as HEX, RGB, and HSL, and can also handle CSS variables for enhanced flexibility.
+
+
+## Features
+- Multiple color format support:
+    - HEX: `#xxx`, `#xxxxxx`, `#xxxxxxxx`
+    - RGB: `rgb(xxx, xxx, xxx)`, `rgb(xxx xxx xxx)`
+    - HSL: `hsl(xxx, xx%, xx%)`, `hsl(xdeg, x%, x%)`
+- CSS variable support:
+    - Converts CSS variables to `rgb(var(--color) / <alpha-value>)` format for Tailwind opacity. **CSS variables will not generate shades!**
+- Custom shade generation:
+    - Automatically generates shades: `50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950`.
+
 
 ## Installation
 
-You can install tw-color-shades via npm or yarn:
+### You can install `tw-color-shades` via npm or yarn:
 
 ```bash
 npm install tw-color-shades
@@ -12,7 +24,34 @@ npm install tw-color-shades
 yarn add tw-color-shades
 ```
 
-## Usages
+## Usage
+
+### Use within any Javascript
+
+```js
+const twShades = require('tw-color-shades');
+const shades = twShades('#3498db');
+console.log(shades);
+
+// Output:
+{
+  50: 'rgb(234, 246, 253)',
+  ...
+  500: 'rgb(52, 152, 219)',
+  ...
+  950: 'rgb(0, 40, 89)'
+}
+
+// Use CSS var
+const color_with_opacity_support = twShades('--ui-base-color');
+console.log(color_with_opacity_support);
+
+// Output:
+"rgb(var(--ui-base-color) / <alpha-value>)"
+```
+
+### Use within `tailwind.config.cjs`
+
 Import the library into your `tailwind.config.cjs` file and use it like below:
 
 ```js
@@ -20,50 +59,56 @@ Import the library into your `tailwind.config.cjs` file and use it like below:
 const twShades = require('tw-color-shades');
 
 module.exports = {
-    content: [],
-    theme: {
-        extend: {
-            colors: {
-                brand: twShades('#FF5722')
-            }
-        }
-    },
-    plugins: []
-}
+  content: [],
+  theme: {
+    extend: {
+      colors: {
+        brand: twShades('#3498db'),   // HEX color shades
+        primary: twShades('--ui-base-color'),  // CSS variable for opacity
+      }
+    }
+  },
+  plugins: []
+};
 ```
 The above code will generate the following Tailwind classes:
 
 ```css
-X-brand-50
-X-brand-100
-X-brand-200
-X-brand-300
-X-brand-400
-X-brand-500
-X-brand-600
-X-brand-700
-X-brand-800
-X-brand-900
-X-brand-950
+/* Use of the Hex color shades */
+class="X-brand-50"
+...
+class="X-brand-500"
+...
+class="X-brand-950"
+
+/* use of the CSS var */
+class="bg-primary/60"
 ```
-> X = bg/text/border/fill or any other color attributes!
+> Replace X with any valid Tailwind color utility, such as `bg`, `text`, `border`, or `fill`.
+>> The CSS var will not generates shades! Instead, it will be compatible with opacity-based color classes like `bg-primary/50`
 
-## Supported Color Formats
-tw-color-shades supports the following color formats:
 
-- HEX: `#xxx`, `#xxxxxx`, `#xxxxxxxx`
-- RGB: `rgb(xxx, xxx, xxx)`, `rgb(xxx,xxx,xxx)`, `rgb(xxx xxx xxx)`
-- HSL: `hsl(xxx, xx%, xx%)`, `hsl(xxx xx% xx%)`, `hsl(xdeg, x%, x%)`
-
-## API Reference
+## API Documentation
 `twShades(color: string): { [key: number]: string }`
 Generates Tailwind CSS-compatible shades from a single color.
 
-`color`: The color value to generate shades from. Supports HEX, RGB, and HSL formats.
+### Parameters
+- `color`(string): The input color value in HEX, RGB, HSL format, or a CSS variable.
 
-Returns an object mapping shade values (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950) to their corresponding colors.
+### Returns
+- An object where the keys represent the shade values (e.g., 50, 100) and the values are the corresponding colors in RGB format.
+- For CSS variables, it returns a string compatible with Tailwind CSS opacity utilities.
 
-Throws an error if the color format is not recognized or invalid.
+### Throws
+- An error if the color format is not recognized or invalid.
+
+
+## Contributing
+1. Fork the repository.
+2. Create a new feature branch.
+3. Commit your changes.
+4. Open a pull request.
+
 
 ## **Copyright**
 
@@ -71,8 +116,4 @@ The code and documentation are copyright 2024 by [M B Parvez](https://www.mbparv
 
 ## **License**
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+This project is licensed under the MIT License.
