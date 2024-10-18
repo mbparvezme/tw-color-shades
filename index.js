@@ -1,8 +1,8 @@
 /**
- * Generate Tailwind-compatible shades from a single color.
+ * Generate Tailwind-compatible shades from a single color or CSS variable.
  * Supports color formats including hex (#xxxxxx), rgb(xxx, xxx, xxx), hsl(xxx, xx%, xx%).
  * 
- * @param {string} color The color value to generate shades from.
+ * @param {string} color The color value or CSS variable to generate shades from.
  *   Supported HEX formats: #xxx, #xxxxxx and #xxxxxxxx.
  *   Supported RGB formats: rgb(xxx, xxx, xxx), rgb(xxx,xxx,xxx), rgb(xxx xxx xxx).
  *   Supported HSL formats: hsl(xxx, xx%, xx%), hsl(xxx xx% xx%) and hsl(xdeg, x%, x%).
@@ -10,6 +10,12 @@
  * @throws {Error} If the color format is not recognized or invalid.
  */
 function twShades(color) {
+  // If CSS var, no shades will be generated! Instead, it will return
+  // an RGB color string with that supports TailwindCSS opacity values
+  if (color.startsWith("--")) {
+    return `rgb(var(${color}) / <alpha-value>)`;
+  }
+
   const baseColor = parseColor(color);
   validateColor(baseColor);
 
