@@ -3,7 +3,7 @@ const twShades = require('.');
 
 describe('twShades function', () => {
   test('Generates shades correctly for valid hex color', () => {
-    const color = '#3498db'; // Example hex color
+    const color = '#3498db';
     const shades = twShades(color);
 
     expect(shades).toEqual({
@@ -19,6 +19,12 @@ describe('twShades function', () => {
       900: 'rgb(10, 30, 44)',
       950: 'rgb(5, 15, 22)',
     });
+  });
+
+  test('Returns opacity supported RGB color method for TailwindCSS', () => {
+    const color = '--primary-color';
+    const shades = twShades(color);
+    expect(shades).toEqual(`rgb(var(--primary-color) / <alpha-value>)`);
   });
 
   test('Throws error for invalid color format', () => {
