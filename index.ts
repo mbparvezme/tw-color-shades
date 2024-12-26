@@ -2,16 +2,17 @@
  * Generate Tailwind-compatible shades from a single color or CSS variable.
  * Supports color formats including hex (#xxxxxx), rgb(xxx, xxx, xxx), hsl(xxx, xx%, xx%).
  * 
- * @param {string} color The color value or CSS variable to generate shades from.
+ * @param color The color value or CSS variable to generate shades from.
  *   Supported HEX formats: #xxx, #xxxxxx and #xxxxxxxx.
  *   Supported RGB formats: rgb(xxx, xxx, xxx), rgb(xxx,xxx,xxx), rgb(xxx xxx xxx).
  *   Supported HSL formats: hsl(xxx, xx%, xx%), hsl(xxx xx% xx%) and hsl(xdeg, x%, x%).
- * @returns {{[key: number]: string}} An object mapping shade values to their corresponding colors.
- * @throws {Error} If the color format is not recognized or invalid.
+ * @param makeShades Determines whether to generate shades or return a single color.
+ * @returns An object mapping shade values to their corresponding colors, or a single color string.
+ * @throws If the color format is not recognized or invalid.
  */
-function twShades(color) {
+function twShades(color: string, makeShades: boolean = true): { [key: number]: string } | string {
   // If CSS var, no shades will be generated! Instead, it will return
-  // an RGB color string with that supports TailwindCSS opacity values
+  // an RGB color string that supports TailwindCSS opacity values
   if (color.startsWith("--")) {
     return `rgb(var(${color}) / <alpha-value>)`;
   }
@@ -19,11 +20,15 @@ function twShades(color) {
   const baseColor = parseColor(color);
   validateColor(baseColor);
 
-  const black = [0, 0, 0];
-  const white = [255, 255, 255];
+  if (!makeShades) {
+    return `rgb(${baseColor[0]} ${baseColor[1]} ${baseColor[2]} / <alpha-value>)`;
+  }
+
+  const black: [number, number, number] = [0, 0, 0];
+  const white: [number, number, number] = [255, 255, 255];
   const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 
-  const result = {};
+  const result: { [key: number]: string } = {};
 
   for (const shade of shades) {
     if (shade === 500) {
@@ -44,11 +49,11 @@ function twShades(color) {
 
 /**
  * Parse the given color string and convert it to RGB format.
- * @param {string} color The color value to parse.
- * @returns {number[]} An array containing RGB values [r, g, b].
- * @throws {Error} If the color format is not recognized or invalid.
+ * @param color The color value to parse.
+ * @returns An array containing RGB values [r, g, b].
+ * @throws If the color format is not recognized or invalid.
  */
-function parseColor(color) {
+function parseColor(color: string): [number, number, number] {
   if (color.startsWith("#")) {
     return hexToRgbArray(color);
   } else if (color.startsWith("rgb(")) {
@@ -62,22 +67,22 @@ function parseColor(color) {
 
 /**
  * Validate the RGB color values.
- * @param {number[]} rgb An array containing RGB values [r, g, b].
- * @throws {Error} If any RGB value is out of the valid range [0-255].
+ * @param rgb An array containing RGB values [r, g, b].
+ * @throws If any RGB value is out of the valid range [0-255].
  */
-function validateColor(rgb) {
-  if (rgb.length !== 3 || rgb.some(value => value < 0 || value > 255)) {
+function validateColor(rgb: [number, number, number]): void {
+  if (rgb.some(value => value < 0 || value > 255)) {
     throw new Error(`Invalid RGB color: ${rgb}`);
   }
 }
 
 /**
  * Convert a hex color string to an RGB array.
- * @param {string} hex The hex color string (e.g., "#ffffff").
- * @returns {number[]} An array containing RGB values [r, g, b].
- * @throws {Error} If the hex color string is invalid.
+ * @param hex The hex color string (e.g., "#ffffff").
+ * @returns An array containing RGB values [r, g, b].
+ * @throws If the hex color string is invalid.
  */
-function hexToRgbArray(hex) {
+function hexToRgbArray(hex: string): [number, number, number] {
   let processedHex = hex.replace('#', '');
   if (processedHex.length === 3) {
     processedHex = processedHex.split('').map(char => char + char).join('');
@@ -88,17 +93,17 @@ function hexToRgbArray(hex) {
   return [
     parseInt(processedHex.substring(0, 2), 16),
     parseInt(processedHex.substring(2, 4), 16),
-    parseInt(processedHex.substring(4, 6), 16)
+    parseInt(processedHex.substring(4, 6), 16),
   ];
 }
 
 /**
  * Parse an RGB color string and convert it to an RGB array.
- * @param {string} rgbString The RGB color string (e.g., "rgb(255, 255, 255)", "rgb(255,255,255)" or "rgb(255 255 255)").
- * @returns {number[]} An array containing RGB values [r, g, b].
- * @throws {Error} If the RGB color string is invalid.
+ * @param rgbString The RGB color string (e.g., "rgb(255, 255, 255)").
+ * @returns An array containing RGB values [r, g, b].
+ * @throws If the RGB color string is invalid.
  */
-function parseRgbString(rgbString) {
+function parseRgbString(rgbString: string): [number, number, number] {
   const rgbRegex = /^rgb\s*\(\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*\)$/;
   const match = rgbString.match(rgbRegex);
 
@@ -106,16 +111,16 @@ function parseRgbString(rgbString) {
     throw new Error(`Invalid RGB color provided: ${rgbString}`);
   }
 
-  return match.slice(1).map(Number);
+  return match.slice(1).map(Number) as [number, number, number];
 }
 
 /**
  * Parse an HSL color string and convert it to an RGB array.
- * @param {string} hslString The HSL color string (e.g., "hsl(240, 100%, 50%)").
- * @returns {number[]} An array containing RGB values [r, g, b].
- * @throws {Error} If the HSL color string is invalid.
+ * @param hslString The HSL color string (e.g., "hsl(240, 100%, 50%)").
+ * @returns An array containing RGB values [r, g, b].
+ * @throws If the HSL color string is invalid.
  */
-function hslToRgbArray(hslString) {
+function hslToRgbArray(hslString: string): [number, number, number] {
   const hslRegex = /^hsl\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/;
   const match = hslString.match(hslRegex);
 
@@ -128,12 +133,12 @@ function hslToRgbArray(hslString) {
   s /= 100;
   l /= 100;
 
-  let r, g, b;
+  let r: number, g: number, b: number;
 
   if (s === 0) {
     r = g = b = l; // achromatic
   } else {
-    const hueToRgb = (p, q, t) => {
+    const hueToRgb = (p: number, q: number, t: number): number => {
       if (t < 0) t += 1;
       if (t > 1) t -= 1;
       if (t < 1 / 6) return p + (q - p) * 6 * t;
@@ -155,25 +160,25 @@ function hslToRgbArray(hslString) {
 
 /**
  * Format RGB values into an RGB color string.
- * @param {number[]} rgb An array containing RGB values [r, g, b].
- * @returns {string} The RGB color string (e.g., "rgb(255, 255, 255)").
+ * @param rgb An array containing RGB values [r, g, b].
+ * @returns The RGB color string (e.g., "rgb(255, 255, 255)").
  */
-function formatColor(rgb) {
+function formatColor(rgb: [number, number, number]): string {
   return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
 
 /**
  * Calculate a color between two RGB colors based on a percentage.
- * @param {number} percentage The percentage of the color transition (0 to 1).
- * @param {number[]} start The starting RGB color [r, g, b].
- * @param {number[]} end The ending RGB color [r, g, b].
- * @returns {number[]} The RGB color array at the specified percentage.
+ * @param percentage The percentage of the color transition (0 to 1).
+ * @param start The starting RGB color [r, g, b].
+ * @param end The ending RGB color [r, g, b].
+ * @returns The RGB color array at the specified percentage.
  */
-function getColor(percentage, start, end) {
+function getColor(percentage: number, start: [number, number, number], end: [number, number, number]): [number, number, number] {
   return end.map((channel, index) => {
     return Math.round(channel + percentage * (start[index] - channel));
-  });
+  }) as [number, number, number];
 }
 
 // Export the twShades function for use in other modules
-module.exports = twShades;
+export default twShades;
