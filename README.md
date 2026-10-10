@@ -5,7 +5,7 @@ Generate a Tailwind-style 11-stop color ramp (`50` … `950`) in OKLCH from a si
 Tailwind v4 moved its palette to `oklch()`. This library takes one color — hex, rgb, hsl, oklch, named, anything CSS understands — and produces the eleven stops around it, following the spacing of Tailwind's own ramps and mapping the result into a real display gamut.
 
 ```bash
-npx tw-color-shades "#3498db"
+npx twcs "#3498db"
 ```
 
 ```css
@@ -74,11 +74,20 @@ Global settings use a `--` prefix so they can never collide with a color name:
 ### CLI
 
 ```bash
-npx tw-color-shades "#3498db" --name brand
-npx tw-color-shades "#f8fafc" --name surface --anchor 50
-npx tw-color-shades "#facc15" --format hex --output json
-npx tw-color-shades "surface-50:#f8fafc"
+npx twcs "#3498db" --name brand
+npx twcs "#f8fafc" --name surface --anchor 50
+npx twcs "#facc15" --format hex --output json
+npx twcs "surface-50:#f8fafc"
 ```
+
+`twcs` is a short alias published alongside the main package, so the command
+above needs no install. Three forms all run the same CLI:
+
+| Command | Needs |
+| --- | --- |
+| `npx twcs <color>` | nothing — shortest form |
+| `npx tw-color-shades <color>` | nothing |
+| `twcs <color>` | `npm i -D tw-color-shades` (adds both `twcs` and `tw-color-shades` to `node_modules/.bin`) |
 
 | Option | Description | Default |
 | --- | --- | --- |
@@ -93,6 +102,8 @@ npx tw-color-shades "surface-50:#f8fafc"
 | `-q, --quiet` | Suppress warnings | |
 
 `--output tailwind3` prints a `tailwind.config.js` color object, for a v3 project.
+
+Run `twcs --help` for the full list.
 
 ### JavaScript / TypeScript
 
@@ -157,6 +168,8 @@ v2 is ESM-only and named-exported, and defaults to OKLCH:
 import { generateShades } from 'tw-color-shades';
 colors: { brand: generateShades('#3498db', { format: 'rgb' }) }
 ```
+
+The CLI no longer needs Tailwind installed at all — it is a standalone tool.
 
 Still on Tailwind v3? `--output tailwind3` with `--format rgb` prints a drop-in config block. The v1 `--css-var` behaviour (returning `rgb(var(--x) / <alpha-value>)`) is gone: Tailwind v4 handles opacity through `color-mix()` natively, so a plain color value already supports `bg-brand-500/40`.
 

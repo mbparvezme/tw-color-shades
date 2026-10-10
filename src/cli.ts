@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   generateShades,
   generateRamp,
@@ -14,7 +17,11 @@ const HELP = `
 tw-color-shades - generate a Tailwind v4 OKLCH ramp from one color
 
 Usage
-  npx tw-color-shades <color> [options]
+  twcs <color> [options]
+
+  Installed locally:  npx twcs <color>
+  Zero install:       npx tw-color-shades <color>
+                      npx -p tw-color-shades twcs <color>
 
 Options
   -n, --name <name>      Color name in the output        (default: brand)
@@ -30,15 +37,30 @@ Options
   -v, --version          Show the version
 
 Examples
-  npx tw-color-shades "#3498db"
-  npx tw-color-shades "#3498db" --name brand --gamut srgb
-  npx tw-color-shades "#f8fafc" --name surface --anchor 50
-  npx tw-color-shades "surface-50:#f8fafc"
-  npx tw-color-shades "oklch(62.3% 0.214 259.8)" --format hex --output json
+  twcs "#3498db"
+  twcs "#3498db" --name brand --gamut srgb
+  twcs "#f8fafc" --name surface --anchor 50
+  twcs "surface-50:#f8fafc"
+  twcs "oklch(62.3% 0.214 259.8)" --format hex --output json
 
 The anchor tells the generator which stop your color already is, so a very
 light or very dark input keeps its exact value instead of being forced to 500.
 `;
+
+/**
+ * Our own version, read from the package we were installed as part of.
+ * `npm_package_version` is only set by `npm run`, and when the CLI is reached
+ * through the `twcs` shim it would report the wrong package.
+ */
+function ownVersion(): string {
+  try {
+    const here = dirname(fileURLToPath(import.meta.url));
+    const pkg = readFileSync(join(here, '..', 'package.json'), 'utf8');
+    return (JSON.parse(pkg) as { version?: string }).version ?? 'unknown';
+  } catch {
+    return 'unknown';
+  }
+}
 
 const FORMATS = ['oklch', 'hex', 'rgb'];
 const GAMUTS = ['srgb', 'p3', 'rec2020', 'none'];
@@ -55,7 +77,7 @@ interface Cli {
 
 function fail(message: string): never {
   console.error(`Error: ${message}`);
-  console.error(`Run "npx tw-color-shades --help" for usage.`);
+  console.error('Run "twcs --help" for usage.');
   process.exit(1);
 }
 
@@ -167,7 +189,7 @@ function main(): void {
     process.exit(0);
   }
   if (args.includes('-v') || args.includes('--version')) {
-    console.log(process.env.npm_package_version ?? '2.0.0');
+    console.log(ownVersion());
     process.exit(0);
   }
 

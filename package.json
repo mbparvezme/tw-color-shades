@@ -18,6 +18,10 @@
       "types": "./dist/plugin.d.ts",
       "default": "./dist/plugin.js"
     },
+    "./cli": {
+      "types": "./dist/cli.d.ts",
+      "default": "./dist/cli.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -58,7 +62,11 @@
     "color-scale",
     "design-tokens",
     "gamut-mapping",
-    "p3"
+    "p3",
+    "oklch-generator",
+    "color-ramp",
+    "oklch-palette",
+    "cli"
   ],
   "dependencies": {
     "culori": "^4.0.1"
