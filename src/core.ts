@@ -11,7 +11,7 @@ export type Shade = (typeof SHADES)[number];
 /**
  * Reference lightness, taken from Tailwind v4's own `blue` ramp. Only the
  * *shape* of this curve is used: the spacing between stops. Absolute values
- * are re-scaled around the anchor, so a yellow input is never forced down to
+ * are rescaled around the anchor, so a yellow input is never forced down to
  * blue's lightness.
  */
 const L_REF: Record<Shade, number> = {
@@ -28,7 +28,7 @@ const C_REF: Record<Shade, number> = {
   500: 1, 600: 1.145, 700: 1.136, 800: 0.93, 900: 0.682, 950: 0.425,
 };
 
-/** Normalised position of each stop along the ramp: 950 -> 0, 50 -> 1. */
+/** Normalized position of each stop along the ramp: 950 -> 0, 50 -> 1. */
 const T_REF: Record<Shade, number> = (() => {
   const lo = L_REF[950];
   const span = L_REF[50] - lo;
@@ -55,7 +55,7 @@ const MIN_SPAN = 0.02;
  */
 const GAMUT_MARGIN = 2e-4;
 
-/** Only warn about clipping once it is big enough to actually see. */
+/** Only warn about clipping once it is big enough to see. */
 const CLIP_WARN_RATIO = 0.05;
 
 export type ColorFormat = 'oklch' | 'hex' | 'rgb';
@@ -113,8 +113,8 @@ function num(value: number, precision: number): string {
  *
  * Stops above the anchor are spread across `[anchorL, lightest]` and stops
  * below it across `[darkest, anchorL]`, both keeping the reference curve's
- * relative spacing. The anchor itself is returned untouched, and the result
- * is monotonic by construction.
+ * relative spacing. The anchor is returned untouched, and lightness never
+ * doubles back on itself.
  */
 function lightnessFor(t: number, tAnchor: number, anchorL: number, lightest: number, darkest: number): number {
   if (t === tAnchor) return anchorL;
@@ -137,8 +137,8 @@ export interface RampStop {
 /**
  * Build the ramp as raw OKLCH numbers, without formatting it.
  *
- * Useful when you need the values for further math; most callers want
- * {@link generateShades} instead.
+ * Returns numbers instead of strings, for when you want to do your own math.
+ * Most code wants {@link generateShades}.
  */
 export function generateRamp(
   inputColor: string,
@@ -262,9 +262,9 @@ function formatStop(stop: RampStop, format: ColorFormat, precision: number): str
  * remaining stops are spread around it, following the spacing of Tailwind's
  * own ramps and mapped into the target gamut.
  *
- * The one case where the anchor is not reproduced bit-for-bit is an input
- * that lies outside the target gamut, which has its chroma reduced like any
- * other stop. Pass `gamut: 'none'` to keep such a value untouched.
+ * An input that already lies outside the target gamut is the exception: its
+ * chroma is reduced like any other stop. Pass `gamut: 'none'` to keep such a
+ * value untouched.
  *
  * @example
  * generateShades('#3498db');

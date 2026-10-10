@@ -44,9 +44,9 @@ light or very dark input keeps its exact value instead of being forced to 500.
 `;
 
 /**
- * Our own version, read from the package we were installed as part of.
- * `npm_package_version` is only set by `npm run`, so it is unset when the CLI
- * is invoked directly and would report the consumer's version under `npm run`.
+ * Read the version out of this package's own package.json.
+ * `npm_package_version` is only set by `npm run`, so it is empty when the CLI
+ * runs directly, and reports the host project's version under `npm run`.
  */
 function ownVersion(): string {
   try {
