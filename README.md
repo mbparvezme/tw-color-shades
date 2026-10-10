@@ -203,6 +203,11 @@ The v1 CSS variable mode (returning `rgb(var(--x) / <alpha-value>)`) is gone.
 Tailwind v4 handles opacity with `color-mix()`, so a plain color value already
 supports `bg-brand-500/40`.
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md). v2 is a breaking release; the migration notes
+are in the [Migrating from v1](#migrating-from-v1) section above.
+
 ## Contributing
 
 ```bash
