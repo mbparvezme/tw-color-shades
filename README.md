@@ -2,7 +2,7 @@
 
 Generate a Tailwind-style 11-stop color ramp (`50` … `950`) in OKLCH from a single color.
 
-Tailwind v4 moved its palette to `oklch()`. This library takes one color — hex, rgb, hsl, oklch, named, anything CSS understands — and produces the eleven stops around it, following the spacing of Tailwind's own ramps and mapping the result into a real display gamut.
+Tailwind v4 moved its palette to `oklch()`. This library takes one color - hex, rgb, hsl, oklch, named, anything CSS understands - and produces the eleven stops around it, following the spacing of Tailwind's own ramps and mapping the result into a real display gamut.
 
 ```bash
 npx tw-color-shades "#3498db"
@@ -26,7 +26,7 @@ npx tw-color-shades "#3498db"
 
 ## Features
 
-- **Your color is preserved exactly.** The input lands on its anchor stop bit-for-bit — no drift, at any anchor.
+- **Your color is preserved exactly.** The input lands on its anchor stop bit-for-bit - no drift, at any anchor.
 - **Anchor control.** A pale background is not a `500`. Say which stop your color actually is and the ramp is built around it.
 - **Gamut mapping.** Chroma is fitted to a real display gamut (P3 by default, sRGB on request), so a ramp never degenerates into neon sludge.
 - **Monotonic by construction.** Lightness always decreases from `50` to `950`, whatever you feed it.
@@ -55,7 +55,7 @@ npm install tw-color-shades
 }
 ```
 
-That generates the full set of utilities — `bg-brand-500`, `text-accent-700`, `border-surface-200`, `ring-brand-600/40` — and also emits the matching `--color-*` custom properties on `:root`, so the same values are reachable from hand-written CSS.
+That generates the full set of utilities - `bg-brand-500`, `text-accent-700`, `border-surface-200`, `ring-brand-600/40` - and also emits the matching `--color-*` custom properties on `:root`, so the same values are reachable from hand-written CSS.
 
 Global settings use a `--` prefix so they can never collide with a color name:
 
@@ -130,7 +130,7 @@ Tell the library which stop your color actually is:
 }
 ```
 
-The utilities are still named across the full range — `bg-surface-50` through `bg-surface-950`. The suffix only tells the engine where to put your color. A suffix that is not a real Tailwind stop is left alone, so a color legitimately called `brand-2` keeps its name.
+The utilities are still named across the full range - `bg-surface-50` through `bg-surface-950`. The suffix only tells the engine where to put your color. A suffix that is not a real Tailwind stop is left alone, so a color legitimately called `brand-2` keeps its name.
 
 Stops above the anchor are spread toward the light end and stops below it toward the dark end, keeping the relative spacing of Tailwind's ramps, so the anchor itself never moves.
 
@@ -142,9 +142,9 @@ Pass `gamut: 'srgb'` for an sRGB-only brand, or `gamut: 'none'` to skip mapping 
 
 ## Notes on the color model
 
-The lightness spacing and chroma curve are derived from Tailwind's `blue` ramp, but only their *shape* is used — absolute values are rescaled around your anchor. That matters: Tailwind's own ramps vary a lot by hue (`blue-500` sits at `L=0.623`, `yellow-500` at `L=0.795`), so a fixed lightness table would drag a yellow down into olive.
+The lightness spacing and chroma curve are derived from Tailwind's `blue` ramp, but only their *shape* is used - absolute values are rescaled around your anchor. That matters: Tailwind's own ramps vary a lot by hue (`blue-500` sits at `L=0.623`, `yellow-500` at `L=0.795`), so a fixed lightness table would drag a yellow down into olive.
 
-Hue is held constant by default. Tailwind's own ramps drift slightly — `blue` moves about 13° from `50` to `950`, `yellow` nearly 48° — so for warm colors `hueShift` is worth trying if you want darker stops to warm up rather than go flat.
+Hue is held constant by default. Tailwind's own ramps drift slightly - `blue` moves about 13° from `50` to `950`, `yellow` nearly 48° - so for warm colors `hueShift` is worth trying if you want darker stops to warm up rather than go flat.
 
 ## Migrating from v1
 
@@ -164,7 +164,7 @@ import { generateShades } from 'tw-color-shades';
 colors: { brand: generateShades('#3498db', { format: 'rgb' }) }
 ```
 
-The CLI no longer needs Tailwind installed at all — it is a standalone tool.
+The CLI no longer needs Tailwind installed at all - it is a standalone tool.
 
 Still on Tailwind v3? `--output tailwind3` with `--format rgb` prints a drop-in config block. The v1 `--css-var` behaviour (returning `rgb(var(--x) / <alpha-value>)`) is gone: Tailwind v4 handles opacity through `color-mix()` natively, so a plain color value already supports `bg-brand-500/40`.
 
