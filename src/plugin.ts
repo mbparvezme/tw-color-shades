@@ -84,7 +84,7 @@ export function buildPalettes(options: PluginOptions): {
 }
 
 /**
- * Minimal structural type for the value `plugin.withOptions` returns.
+ * Structural type for what `plugin.withOptions` returns.
  *
  * Tailwind's own inferred type points at a hashed internal module, which
  * TypeScript cannot name in a `.d.ts` (TS2742), so the shape is declared

@@ -50,7 +50,7 @@ describe('anchor exactness', () => {
     expect(untouched.c).toBeCloseTo(0.214, 6);
   });
 
-  it('survives a round trip through the formatted output', () => {
+  it('round-trips through the formatted output', () => {
     const shades = generateShades('#3498db', { anchor: 500, precision: 5 });
     const input = oklchOf('#3498db');
     const out = oklchOf(shades[500]);
@@ -111,7 +111,7 @@ describe('gamut mapping', () => {
     }
   });
 
-  it('never emits absurd chroma when anchoring a saturated color at 50', () => {
+  it('keeps chroma in range when anchoring a saturated color at 50', () => {
     const { stops } = generateRamp('#3498db', { anchor: 50 });
     for (const shade of SHADES) {
       expect(stops[shade].c, `shade ${shade}`).toBeLessThan(0.4);
@@ -178,7 +178,7 @@ describe('formats', () => {
     expect(generateShades('#3498db80')[500]).toMatch(/\/ 0?\.\d+\)$/);
   });
 
-  it('honours precision', () => {
+  it('honors precision', () => {
     expect(generateShades('#3498db', { precision: 1 })[500]).toMatch(/^oklch\([\d.]+% [\d.]+ [\d.]+\)$/);
   });
 });
@@ -213,7 +213,7 @@ describe('warnings', () => {
     expect(warnings.some((w) => w.code === 'low-contrast-span')).toBe(true);
   });
 
-  it('is quiet for a well-chosen anchor', () => {
+  it('emits no warnings for a sensible anchor', () => {
     const { warnings } = generateRamp('#3498db', { anchor: 500 });
     expect(warnings).toEqual([]);
   });
