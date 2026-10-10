@@ -17,11 +17,7 @@ const HELP = `
 tw-color-shades - generate a Tailwind v4 OKLCH ramp from one color
 
 Usage
-  twcs <color> [options]
-
-  Installed locally:  npx twcs <color>
-  Zero install:       npx tw-color-shades <color>
-                      npx -p tw-color-shades twcs <color>
+  npx tw-color-shades <color> [options]
 
 Options
   -n, --name <name>      Color name in the output        (default: brand)
@@ -37,11 +33,11 @@ Options
   -v, --version          Show the version
 
 Examples
-  twcs "#3498db"
-  twcs "#3498db" --name brand --gamut srgb
-  twcs "#f8fafc" --name surface --anchor 50
-  twcs "surface-50:#f8fafc"
-  twcs "oklch(62.3% 0.214 259.8)" --format hex --output json
+  npx tw-color-shades "#3498db"
+  npx tw-color-shades "#3498db" --name brand --gamut srgb
+  npx tw-color-shades "#f8fafc" --name surface --anchor 50
+  npx tw-color-shades "surface-50:#f8fafc"
+  npx tw-color-shades "oklch(62.3% 0.214 259.8)" --format hex --output json
 
 The anchor tells the generator which stop your color already is, so a very
 light or very dark input keeps its exact value instead of being forced to 500.
@@ -49,8 +45,8 @@ light or very dark input keeps its exact value instead of being forced to 500.
 
 /**
  * Our own version, read from the package we were installed as part of.
- * `npm_package_version` is only set by `npm run`, and when the CLI is reached
- * through the `twcs` shim it would report the wrong package.
+ * `npm_package_version` is only set by `npm run`, so it is unset when the CLI
+ * is invoked directly and would report the consumer's version under `npm run`.
  */
 function ownVersion(): string {
   try {
@@ -77,7 +73,7 @@ interface Cli {
 
 function fail(message: string): never {
   console.error(`Error: ${message}`);
-  console.error('Run "twcs --help" for usage.');
+  console.error('Run "npx tw-color-shades --help" for usage.');
   process.exit(1);
 }
 

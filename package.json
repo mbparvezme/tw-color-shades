@@ -6,8 +6,7 @@
   "main": "./dist/core.js",
   "types": "./dist/core.d.ts",
   "bin": {
-    "tw-color-shades": "./dist/cli.js",
-    "twcs": "./dist/cli.js"
+    "tw-color-shades": "./dist/cli.js"
   },
   "exports": {
     ".": {
@@ -17,10 +16,6 @@
     "./plugin": {
       "types": "./dist/plugin.d.ts",
       "default": "./dist/plugin.js"
-    },
-    "./cli": {
-      "types": "./dist/cli.d.ts",
-      "default": "./dist/cli.js"
     },
     "./package.json": "./package.json"
   },
@@ -65,8 +60,7 @@
     "p3",
     "oklch-generator",
     "color-ramp",
-    "oklch-palette",
-    "cli"
+    "oklch-palette"
   ],
   "dependencies": {
     "culori": "^4.0.1"

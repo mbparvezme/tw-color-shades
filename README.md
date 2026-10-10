@@ -5,7 +5,7 @@ Generate a Tailwind-style 11-stop color ramp (`50` … `950`) in OKLCH from a si
 Tailwind v4 moved its palette to `oklch()`. This library takes one color — hex, rgb, hsl, oklch, named, anything CSS understands — and produces the eleven stops around it, following the spacing of Tailwind's own ramps and mapping the result into a real display gamut.
 
 ```bash
-npx twcs "#3498db"
+npx tw-color-shades "#3498db"
 ```
 
 ```css
@@ -74,20 +74,15 @@ Global settings use a `--` prefix so they can never collide with a color name:
 ### CLI
 
 ```bash
-npx twcs "#3498db" --name brand
-npx twcs "#f8fafc" --name surface --anchor 50
-npx twcs "#facc15" --format hex --output json
-npx twcs "surface-50:#f8fafc"
+npx tw-color-shades "#3498db" --name brand
+npx tw-color-shades "#f8fafc" --name surface --anchor 50
+npx tw-color-shades "#facc15" --format hex --output json
+npx tw-color-shades "surface-50:#f8fafc"
 ```
 
-`twcs` is a short alias published alongside the main package, so the command
-above needs no install. Three forms all run the same CLI:
-
-| Command | Needs |
-| --- | --- |
-| `npx twcs <color>` | nothing — shortest form |
-| `npx tw-color-shades <color>` | nothing |
-| `twcs <color>` | `npm i -D tw-color-shades` (adds both `twcs` and `tw-color-shades` to `node_modules/.bin`) |
+Needs no install. Inside a project that already depends on the package, the
+`tw-color-shades` binary is on `node_modules/.bin`, so package scripts can
+call it directly.
 
 | Option | Description | Default |
 | --- | --- | --- |
@@ -103,7 +98,7 @@ above needs no install. Three forms all run the same CLI:
 
 `--output tailwind3` prints a `tailwind.config.js` color object, for a v3 project.
 
-Run `twcs --help` for the full list.
+Run `npx tw-color-shades --help` for the full list.
 
 ### JavaScript / TypeScript
 
