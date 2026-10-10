@@ -282,6 +282,24 @@ export function generateShades(inputColor: string, options: ShadeOptions = {}): 
 }
 
 /**
+ * Split a trailing Tailwind stop off a color name, so `surface-50` means
+ * "this color is surface's 50". A suffix that isn't a real stop is left in
+ * the name, keeping a color legitimately called `brand-2` intact.
+ *
+ * Lives here rather than in the plugin so the CLI can use it without
+ * pulling in Tailwind, which is only an optional peer dependency.
+ */
+export function splitAnchor(rawKey: string): { name: string; anchor: Shade } {
+  const key = rawKey.replace(/^['"]|['"]$/g, '');
+  const match = key.match(/^(.+)-(\d{2,3})$/);
+  if (match) {
+    const candidate = Number(match[2]) as Shade;
+    if (SHADES.includes(candidate)) return { name: match[1], anchor: candidate };
+  }
+  return { name: key, anchor: 500 };
+}
+
+/**
  * Backwards-compatible shorthand: a positional anchor instead of an options
  * object, matching the v1 call style.
  */

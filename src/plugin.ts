@@ -1,5 +1,7 @@
 import plugin from 'tailwindcss/plugin.js';
-import { generateShades, SHADES, type ColorFormat, type GamutName, type Shade, type ShadeOptions } from './core.js';
+import { generateShades, SHADES, splitAnchor, type ColorFormat, type GamutName, type ShadeOptions } from './core.js';
+
+export { splitAnchor };
 
 /**
  * Values arrive from the `@plugin` CSS block, where Tailwind parses unquoted
@@ -36,21 +38,6 @@ function asNumber(value: PluginOptionValue | undefined, fallback: number): numbe
   if (value === undefined) return fallback;
   const parsed = typeof value === 'number' ? value : Number(unquote(String(value)));
   return Number.isFinite(parsed) ? parsed : fallback;
-}
-
-/**
- * Split a trailing Tailwind stop off a color name, so `surface-50` means
- * "this color is surface's 50". A suffix that isn't a real stop is left in
- * the name, keeping a color legitimately called `brand-2` intact.
- */
-export function splitAnchor(rawKey: string): { name: string; anchor: Shade } {
-  const key = unquote(rawKey);
-  const match = key.match(/^(.+)-(\d{2,3})$/);
-  if (match) {
-    const candidate = Number(match[2]) as Shade;
-    if (SHADES.includes(candidate)) return { name: match[1], anchor: candidate };
-  }
-  return { name: key, anchor: 500 };
 }
 
 /**

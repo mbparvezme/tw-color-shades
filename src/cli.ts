@@ -5,10 +5,10 @@ import {
   SHADES,
   type ColorFormat,
   type GamutName,
+  splitAnchor,
   type Shade,
   type ShadeOptions,
 } from './core.js';
-import { splitAnchor } from './plugin.js';
 
 const HELP = `
 tw-color-shades - generate a Tailwind v4 OKLCH ramp from one color
